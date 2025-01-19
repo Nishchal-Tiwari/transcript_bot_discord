@@ -58,7 +58,7 @@ async def notify_users(users, message):
     for user in users:
         try:
             # Send a DM to the user
-            await user.send(message)
+            await user.send('```'+message+'```')
             print(f"Sent DM to {user.display_name} ({user.name}#{user.discriminator})")
         except Exception as e:
             print(f"Failed to send DM to {user.display_name}: {e}")
