@@ -9,6 +9,7 @@ from datetime import datetime
 from transcribe import get_transcription_results
 from summarize.summarize_openai import summarize_text
 import asyncio 
+from formatters.transcript_formatter import format_chat_transcript
 # Load environment variables
 load_dotenv()
 
@@ -88,6 +89,7 @@ async def process_recorded_audio_thread(file_path,users):
         summarized_file_path = os.path.join("summarized_output", "summarized_output.txt")
         await asyncio.to_thread(os.makedirs, os.path.dirname(summarized_file_path), exist_ok=True)
         await asyncio.to_thread(write_to_file, summarized_file_path, summarized_output)
+        await notify_users(users, format_chat_transcript({"data": transcription_result}))
         await notify_users(users, summarized_output)
 
         print(f"Summarized output saved to {summarized_file_path}")
