@@ -21,7 +21,7 @@ bot = commands.Bot(command_prefix="!", intents=intents)
 
 # Load the Opus library
 try:
-    discord.opus.load_opus('/opt/homebrew/lib/libopus.dylib')  # Path to Opus
+    discord.opus.load_opus(os.getenv('OPUS_PATH'))  # Path to Opus
     print("Opus library loaded successfully.")
 except discord.opus.OpusNotLoaded:
     print("Failed to load the Opus library. Please ensure it is installed correctly.")
