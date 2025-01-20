@@ -18,7 +18,7 @@ intents = discord.Intents.default()
 intents.members = True  # Enable member intent
 intents.voice_states = True  # Enable voice state intent
 intents.message_content = True  # Required for reading message content
-bot = commands.Bot(command_prefix="!", intents=intents)
+bot = commands.AutoShardedBot(command_prefix="!", intents=intents)
 
 # Load the Opus library
 try:
