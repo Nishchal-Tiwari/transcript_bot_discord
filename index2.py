@@ -6,8 +6,7 @@ import time
 import os
 import json
 from datetime import datetime
-from transcribe import get_transcription_results
-from summarize.summarize_openai import summarize_text
+from processRecordings import processRecording
 import asyncio 
 from formatters.transcript_formatter import format_chat_transcript
 # Load environment variables
@@ -73,9 +72,7 @@ async def notify_users(users, message):
             print(f"Failed to send DM to {user.display_name}: {e}")
             
 async def process_recorded_audio(file_path):
-        result = get_transcription_results(file_path)
-        summarized_output = summarize_text(result)
-                # Write the summarized output to a file
+        summarized_output = processRecording(file_path)
         summarized_file_path = os.path.join(os.getcwd(), "summarized_output", "summarized_output"+str(int(time.time()))+".txt")
         os.makedirs(os.path.dirname(summarized_file_path), exist_ok=True)  # Ensure the directory exists
         with open(summarized_file_path, "w", encoding="utf-8") as summarized_file:
@@ -90,15 +87,19 @@ def write_to_file(file_path, content):
 async def process_recorded_audio_thread(file_path,users):
     try:
         # Offload the transcription and summarization to a thread pool
-        transcription_result = await asyncio.to_thread(get_transcription_results, file_path)
-        summarized_output = await asyncio.to_thread(summarize_text, transcription_result)
+        transcription_result = await processRecording(file_path)
+       
 
         # Offload file writing to a thread
-        summarized_file_path = os.path.join("summarized_output", "summarized_output.txt")
+        summarized_file_path = os.path.join("summarized_output", "summarized_output."+str(int(time.time()))+"txt")
         await asyncio.to_thread(os.makedirs, os.path.dirname(summarized_file_path), exist_ok=True)
-        await asyncio.to_thread(write_to_file, summarized_file_path, summarized_output)
-        await notify_users(users, format_chat_transcript({"data": transcription_result}))
-        await notify_users(users, summarized_output)
+        await asyncio.to_thread(write_to_file, summarized_file_path, json.dumps(transcription_result, indent=4))
+        # await notify_users(users, format_chat_transcript({"data": transcription_result}))
+        await notify_users(users, transcription_result["transcription"])
+        await notify_users(users, json.dumps(transcription_result["tasks"], indent=4))
+        await notify_users(users, '\n'.join(transcription_result["important_points"]))
+        await notify_users(users, transcription_result["summary"])
+        
 
         print(f"Summarized output saved to {summarized_file_path}")
     except Exception as e:
