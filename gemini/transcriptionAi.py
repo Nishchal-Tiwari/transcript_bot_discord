@@ -3,8 +3,10 @@ import google.generativeai as genai
 from google.ai.generativelanguage_v1beta.types import content
 import json
 import asyncio
+load_dotenv()
+api_key = os.getenv("GEMINI_KEY")
 # Configure the API key for Gemini
-genai.configure(api_key="AIzaSyANdph5Yv3x8Pan-TDw8cmq1FBIOYMQeAo")
+genai.configure(api_key=api_key)
 
 
 def upload_to_gemini(path, mime_type=None):
