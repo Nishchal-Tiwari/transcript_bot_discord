@@ -76,11 +76,11 @@ async def getTranscription(file_path):
 # Process the audio file and generate a summary
 
 
-async def doTask():
-    ans = await process_audio_file(
-        "/Users/nishchaltiwari/dev/pvt/zerve/recordings/general_20250123_001645/recording_DeltaXPR_20250123_001645.wav")
-    print(json.dumps(ans, indent=2))
+# async def doTask():
+#     ans = await process_audio_file(
+#         "/Users/nishchaltiwari/dev/pvt/zerve/recordings/general_20250123_001645/recording_DeltaXPR_20250123_001645.wav")
+#     print(json.dumps(ans, indent=2))
 
-# Run the async function
-if __name__ == "__main__":
-    asyncio.run(doTask())
+# # Run the async function
+# if __name__ == "__main__":
+#     asyncio.run(doTask())
