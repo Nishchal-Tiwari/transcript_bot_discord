@@ -4,13 +4,16 @@ import os
 from kombu import Connection, Exchange, Producer
 from src.transcribers.whispher_transcriber import WhisperTranscriber
 from src.summarizers.gemini_summarizer import GeminiSummarizer
+from dotenv import load_dotenv
+# Load environment variables
+load_dotenv()
 
 transcriber = WhisperTranscriber()
 summarizer = GeminiSummarizer()
 # Exchange and Queue for Discord DM
 DM_EXCHANGE_NAME = "dm_exchange"
 DM_ROUTING_KEY = "dm_key"
-REDIS_URL = "redis://localhost:6379/0"
+REDIS_URL = os.getenv('REDIS_URL')#"redis://localhost:6379/0"
 dm_exchange = Exchange(DM_EXCHANGE_NAME, type="direct")
 
 def send_to_queue(user_id, message_content):

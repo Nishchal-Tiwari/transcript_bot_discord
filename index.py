@@ -10,7 +10,7 @@ from kombu import Connection, Exchange, Queue
 # Load environment variables
 load_dotenv()
 # The code to rewrite
-redis_url = "redis://localhost:6379/0"
+redis_url =  os.getenv('REDIS_URL')
 
 exchange = Exchange("example_exchange", type="direct")
 queue = Queue("example_queue", exchange, routing_key="example_key")

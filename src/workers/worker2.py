@@ -8,7 +8,7 @@ import os
 load_dotenv()
 
 # Constants
-REDIS_URL = "redis://localhost:6379/0"
+REDIS_URL =  os.getenv('REDIS_URL')
 DISCORD_TOKEN = os.getenv('DISCORD_BOT_TOKEN')
 EXCHANGE_NAME = "dm_exchange"
 QUEUE_NAME = "dm_queue"
