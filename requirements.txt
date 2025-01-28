@@ -1,0 +1,10 @@
+discord.py
+py-cord
+python-dotenv
+pydub
+kombu
+google-generativeai
+protobuf
+redis
+openai-whisper
+pynacl
