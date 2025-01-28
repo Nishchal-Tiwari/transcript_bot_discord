@@ -2,6 +2,8 @@ from kombu import Connection, Exchange, Queue
 import discord
 import asyncio
 import traceback
+from dotenv import load_dotenv
+import os
 # Load environment variables
 load_dotenv()
 

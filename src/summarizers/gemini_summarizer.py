@@ -4,9 +4,13 @@ from google.ai.generativelanguage_v1beta.types import content
 import json
 import asyncio
 import logging
+from dotenv import load_dotenv
+import os
+# Load environment variables
+load_dotenv()
 
 class GeminiSummarizer:
-    def __init__(self, api_key="AIzaSyANdph5Yv3x8Pan-TDw8cmq1FBIOYMQeAo"):
+    def __init__(self, api_key=os.getenv('GEMINI_KEY')):
         """
         Initializes the GeminiSummarizer class with the required configurations.
 
