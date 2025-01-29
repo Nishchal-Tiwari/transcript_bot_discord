@@ -6,7 +6,7 @@ import os
 import json
 import asyncio
 from kombu import Connection, Exchange, Queue
-
+import struct
 # Load environment variables
 load_dotenv()
 # The code to rewrite
@@ -30,6 +30,24 @@ except discord.opus.OpusNotLoaded:
 
 # Global variables
 connections = {}
+
+def patched_strip_header_ext(data):
+    if len(data) < 4:  # Ensure data has enough length
+        return data
+
+    if data[0] == 0xBE and data[1] == 0xDE:
+        try:
+            _, length = struct.unpack_from(">HH", data)
+            offset = 4 + (length * 4)
+            if offset < len(data):  # Ensure offset does not exceed data length
+                return data[offset:]
+        except struct.error:
+            return data  # Return original data if unpacking fails
+
+    return data
+
+discord.VoiceClient.strip_header_ext = staticmethod(patched_strip_header_ext)
+
 
 def send_for_processing(filePath):
     with Connection(redis_url) as conn:
