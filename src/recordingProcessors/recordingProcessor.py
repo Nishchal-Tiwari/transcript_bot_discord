@@ -5,6 +5,7 @@ from kombu import Connection, Exchange, Producer
 from src.transcribers.whispher_transcriber import WhisperTranscriber
 from src.summarizers.gemini_summarizer import GeminiSummarizer
 from dotenv import load_dotenv
+from src.formatters.formatter import format_important_points , format_tasks, format_summary
 # Load environment variables
 load_dotenv()
 
@@ -47,10 +48,15 @@ def processGroupRecording(filePath):
     transcriptions = transcriber.sort_transcriptions(transcriptions)
     summary = summarizer.get_summary(transcriber.transcription_to_str(transcriptions))
     for data in users:
+        
+        formatted_important_points = format_important_points(summary["important_points"])
+        formatted_tasks = format_tasks(summary["tasks"])
+        formatted_summary = format_summary(summary["summary"])
+        
         send_to_queue(data['user_id'],transcriber.transcription_to_str(transcriptions))
-        send_to_queue(data['user_id'],json.dumps(summary["important_points"]))
-        send_to_queue(data['user_id'],json.dumps(summary["tasks"]))
-        send_to_queue(data['user_id'],json.dumps(summary["summary"]))
+        send_to_queue(data['user_id'],formatted_important_points)
+        send_to_queue(data['user_id'],formatted_tasks)
+        send_to_queue(data['user_id'],formatted_summary)
     timestamp = time.strftime("%Y%m%d_%H%M%S")
     output_dir = f'output/{timestamp}'
     os.makedirs(output_dir, exist_ok=True)
